@@ -1,5 +1,3 @@
-
-```python
 class Solution:
     def isPalindrome(self, s: str) -> bool:
         if s is None or len(s) == 0:
@@ -15,4 +13,4 @@ class Solution:
             l += 1
             r -= 1
         return True
-```
+
