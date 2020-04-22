@@ -1,49 +1,86 @@
-# Brute force: for each item, loop through array and find other's product. O(n^2)
-# Optimization: use an array to store prefix product, then loop array backwards. O(n)
-# Optimization: use two arrays, one for prefix product, one for suffix product. 
 class Solution:
-    def productExceptSelf(self, nums: List[int]) -> List[int]:
-        if not nums:
-            return []
-        prefix_produc = [1] * len(nums)
-        ans = [1] * len(nums)
-        # get prefix sum 
-        for i in range(len(nums)):
-            if i == 0:
-                prefix_produc[i] = nums[i]
-                continue
-            prefix_produc[i] = prefix_produc[i - 1] * nums[i]
-        
-        suffix_product = 1
-        for j in range(len(nums) - 1, -1, -1):
-            if j == 0:
-                ans[j] = suffix_product
-                continue
-            ans[j] = suffix_product * prefix_produc[j - 1]
-            suffix_product *= nums[j]
-        return ans
-
+# APP1: brute force, multiply all others except itself
+# Time: O(n^2) space: O(1) Runtime: TLE
     def productExceptSelf(self, nums: List[int]) -> List[int]:
         if not nums:
             return []
         n = len(nums)
-        prefix_product, suffix_product, ans = [1] * n, [1] * n, [1] * n
-        for i in range(n): 
-            if i == 0:
-                prefix_product[i] = nums[i]
-                continue
-            prefix_product[i] = prefix_product[i - 1] * nums[i]
-            
-        for j in range(n - 1, - 1, -1):
-            if j == n - 1:
-                suffix_product[j] = nums[j]
-                continue
-            suffix_product[j] = suffix_product[j + 1] * nums[j]    
-        
+        res = []
         for i in range(n):
-            if i > 0:
-                ans[i] *= prefix_product[i - 1]
-            if i < n - 1:
-                ans[i] *= suffix_product[i + 1]
-        return ans
+            product = 1
+            for j in range(n):
+                if i == j:
+                    continue
+                product *= nums[j]
+            res.append(product)
+        return res
+            
+# APP2: preprocess array to get prefix product, then loop back
+# Time: O(n) Space: O(n) Runtime: 92% Memory: 90%
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        if not nums:
+            return []
+        prefix = self.get_prefix_product(nums)
+        n = len(nums)
+        res = [1] * n
+        post_prod = 1
+        for i in range(n - 1, -1, -1):
+            product = post_prod * prefix[i]
+            res[i] = product
+            post_prod *= nums[i]
+        return res
         
+    def get_prefix_product(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        res = [1] * n
+        pre_prod = nums[0]
+        for i in range(1, n):
+            res[i] = pre_prod
+            pre_prod *= nums[i]
+        return res
+
+# APP3: preprocess both prefix and suffix
+# Time: O(n) space: O(n) Runtime: 47% Memory: 30%
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        if not nums:
+            return []
+        n = len(nums)
+        prefix = self.get_prefix_prod(nums)
+        reversed_nums = nums[::-1]
+        suffix = self.get_prefix_prod(reversed_nums)
+        suffix.reverse()
+        res = []
+        for i in range(n):
+            res.append(prefix[i] * suffix[i])
+        return res
+        
+    def get_prefix_prod(self, nums):
+        n = len(nums)
+        prod = 1
+        res = []
+        for i in range(n):
+            res.append(prod)
+            prod *= nums[i]
+        return res
+    
+# APP4: optimize APP2 by operating on the prefix array directly without allocation new array
+# Time: O(n) Space: O(1) Runtime: 92% memory: 86%
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        if not nums:
+            return []
+        n = len(nums)
+        prefix = self.get_prefix_prod(nums)
+        prod = 1
+        for i in range(n - 1, -1, -1):
+            prefix[i] *= prod
+            prod *= nums[i]
+        return prefix
+    
+    def get_prefix_prod(self, nums):
+        n = len(nums)
+        prod = 1
+        res = []
+        for i in range(n):
+            res.append(prod)
+            prod *= nums[i]
+        return res
