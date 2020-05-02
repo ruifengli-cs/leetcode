@@ -1,0 +1,72 @@
+# 72. Construct Binary Tree from Inorder and Postorder Traversal
+# Given inorder and postorder traversal of a tree, construct the binary tree.
+# Input：[1,2,3],[1,3,2]
+# Output：{2,1,3}
+# {1,7}
+
+# inorder:   4 2 5    1    3 6 7
+# postorder: 4 5 2 6 7 3 1
+# Approach:
+# dfs, inorder: left, root, right
+# postorder: left, right, root
+# 1. traverse through postorder backwards,
+# 2. find root from postorder, then divide inorder to left tree and right tree
+# DFS defination: return a tree that can be constructed from in_left, in_right for the last node of postorder
+
+#        2        
+#       /  \
+#      1    3 
+#
+#   last elment postorder root
+    # find root index in inorder
+    # root, root.left = (self, inorder_left, postorder_right): left side of root
+    #       root.right =(self, inorder_left, postorder_right): right side of root
+#
+
+# Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+
+
+class Solution:
+    """
+    @param inorder: A list of integers that inorder traversal of a tree
+    @param postorder: A list of integers that postorder traversal of a tree
+    @return: Root of a tree
+    """
+# Assume there's no duplicated value in input
+# Approach1: binary search root in inorder log(n) find root index
+# APproach2: use hashmap to store {val: index} o(1) to find root index in inorder
+    def buildTree(self, inorder, postorder):
+        mapping = {}
+        for index, val in enumerate(inorder):
+            mapping[val] = index
+        n = len(inorder)
+        m = len(postorder)
+        return self.dfs(inorder, postorder, mapping, 0, n - 1, 0, m - 1)
+        
+    def dfs(self, inorder, postorder, mapping, in_left, in_right, post_left, post_right):
+        if in_left > in_right:
+            return None
+        
+        root = TreeNode(postorder[post_right])
+        root.left = self.dfs(inorder, postorder, mapping, in_left, mapping[postorder[post_right]] - 1, post_left, mapping[postorder[post_right]] - 1)
+        root.right = self.dfs(inorder, postorder, mapping, mapping[postorder[post_right]] + 1, in_right, mapping[postorder[post_right]], post_right - 1)
+        return root
+        
+class Solution:
+    """
+    @param inorder : A list of integers that inorder traversal of a tree
+    @param postorder : A list of integers that postorder traversal of a tree
+    @return : Root of a tree
+    """
+    def buildTree(self, inorder, postorder):
+        if not inorder: return None # inorder is empty
+        root = TreeNode(postorder[-1])
+        rootPos = inorder.index(postorder[-1])
+        root.left = self.buildTree(inorder[ : rootPos], postorder[ : rootPos])
+        root.right = self.buildTree(inorder[rootPos + 1 : ], postorder[rootPos : -1])
+        return root
+        
