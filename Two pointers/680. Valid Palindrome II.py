@@ -1,4 +1,25 @@
 class Solution:
+# APP0: brute force: for each of the char, form a new string without cur char and check palindrom
+    def validPalindrome(self, s: str) -> bool:
+        if not s:
+            return True
+        n = len(s)
+        for i in range(n):
+            new_s = s[:i] + s[i + 1:]
+            if self.is_palin(new_s):
+                return True
+        return False
+
+    def is_palin(self, s):
+        if not s or len(s) < 2:
+            return True
+        left, right = 0, len(s) - 1
+        while left < right:
+            if s[left] != s[right]:
+                return False
+            left += 1
+            right -= 1
+            return True
 #APP1: Recursion. TIme: O(n) Space: O(1)
 # Runtime: 8%, memory: 6%
     def validPalindrome(self, s: str) -> bool:
