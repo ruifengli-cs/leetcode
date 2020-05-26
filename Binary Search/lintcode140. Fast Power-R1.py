@@ -35,6 +35,9 @@ Time: O(n) space: O(1) stack depth = O(n) Runtime: maximum recursion depth excee
         return ans % b
 
 # APP4: binary search iterative approach to multiply exponentially
+# 比如 n=5,可以看做 a^{(101)} % b 5的二进制是101）
+# 而 a 的幂次我们只需要知道 a^1, a^{(10)}, a^{(100)}... 也就是 a^1, a^2, a^4...
+# 因此不断的把 a = a * a 就可以了
 # Time: O(lgn) space: O(1)
     def fastPower(self, a, b, n):
         if n == 0:
