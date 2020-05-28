@@ -1,1 +1,4 @@
-print([i if i != 0 for i in range(5) ])
+
+pattern = 'abcd'
+data = ['11', '22', '33', '44']
+print(set(zip(pattern, data)))
