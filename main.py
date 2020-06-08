@@ -1,4 +1,3 @@
-
-pattern = 'abcd'
-data = ['11', '22', '33', '44']
-print(set(zip(pattern, data)))
+num = []
+# list(int(''.join(map(str, num))) + 1)
+print(list(map(int, list(str(int(''.join(map(str, num))) + 1)))))

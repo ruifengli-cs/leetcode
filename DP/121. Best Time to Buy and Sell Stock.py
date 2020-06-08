@@ -43,7 +43,7 @@ class Solution:
         return ans
         
 # APP4-Draft: DP: f[i][j]: max profit buy at i and sell at j using two dimension array 
-# Here we can calculate f[i][j] directly using prices[j] = prices[i], which means we don't need two dimension 
+# Here we can calculate f[i][j] directly using prices[j] - prices[i], which means we don't need two dimension
 # f[i][j] = max(f[i][j - 1] + price[j] - price[j - 1], price[j] - price[i] if i == j - 1)
 
 # APP4-final: DP optimize APP4-draft using one dimension array, f[j]: max profit sell at j day.

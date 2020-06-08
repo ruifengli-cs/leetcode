@@ -47,3 +47,9 @@ class Solution:
         first.next = self.swapPairs(second.next)
         second.next = first
         return second
+
+    # APP3: same as APP2 but one line. before: first, second, third, after: second, first, third recursion
+    def swapPairs(self, head: ListNode) -> ListNode:
+        if head and head.next:
+            head, head.next, head.next.next = head.next, head, self.swapPairs(head.next.next)
+        return head
