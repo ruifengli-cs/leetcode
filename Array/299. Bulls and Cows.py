@@ -45,3 +45,15 @@ class Solution:
                 visited[int(s)] += 1
                 visited[int(g)] -= 1
         return str(bulls) + 'A' + str(cows) + 'B'
+
+    # APP3: get bulls, both, then use both - bulls to get cows. Note both is min
+    def getHint(self, secret: int, guess: int) -> int:
+        bulls = sum(map(operator.eq, secret, guess))
+        both = sum(min(secret.count(ch), guess.count(ch)) for ch in set(guess))
+        return '%dA%dB' % (bulls, both - bulls)
+
+    # APP4: same as APP2 but using collections.Counter()
+    def getHint(self, secret: int, guess: int) -> int:
+        bulls = sum(a == b for a, b in zip(secret, guess))
+        both_counter = collections.Counter(scret) & collections.Counter(guess)
+        return '%dA%dB' % (bulls, sum(both_counter.values()) - bulls)

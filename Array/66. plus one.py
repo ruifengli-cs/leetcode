@@ -45,3 +45,7 @@ class Solution:
 
         # if input is all 9s like 999999
         return [1] + [0] * n
+
+    # APP4: one line using map
+    def plusOne(self, digits: List[int]) -> List[int]:
+        return map(int, list(str(int(''.join(map(str, digits))) + 1)))
