@@ -3,7 +3,7 @@ class Solution:
     def countSegments(self, s: str) -> int:
         return len(s.split())
     
-    # APP2: one pass
+    # APP2: one pass. Time: O(n) Space: O(1)
     def countSegments(self, s: str) -> int:
         if not s:
             return 0
