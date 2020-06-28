@@ -65,6 +65,11 @@ class Solution:
     
 # APP4: optimize APP2 by operating on the prefix array directly without allocation new array
 # Time: O(n) Space: O(1) Runtime: 92% memory: 86%
+#     input:       [1,2,3,4]
+#     prefix_prod: [1,1,2,6]
+#     suffix_prod: [24,12,4,1]
+#     output:      [24,12,8,6]
+
     def productExceptSelf(self, nums: List[int]) -> List[int]:
         if not nums:
             return []
