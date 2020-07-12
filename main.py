@@ -1,4 +1,6 @@
-arr = [[1],[1,2],[1,2,3]]
-arr2 = arr[-1][:]
-arr2[0] = 4
-print(arr, arr2)
+# x = 31
+# print(bin(~0))
+# print(0<<3)
+# print(bin(~0<<3))
+# print(x & ~0<<3)
+print(11 ^ 1)
