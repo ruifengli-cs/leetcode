@@ -3,7 +3,7 @@ import heapq
 
 class Solution:
     # APP1: minheap. since each row is sorted. put first element of each row in the minheap. then pop k times.
-    # Time: O(xlgn) + O(k) Space: O(X) . X = min(k, n),
+    # Time: O(xlgn) + O(x) Space: O(X) . X = min(k, n),
     def kthSmallest(self, matrix: List[List[int]], k: int) -> int:
         n = len(matrix)
         if not matrix or not matrix[0] or k is None or k < 0 or k > n * n:

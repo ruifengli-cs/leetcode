@@ -65,3 +65,22 @@ class Solution:
                     new[j] = old[j - 1] + 1
             old, new = new, old
         return old[n - 1]
+
+    # APP5: DP dp[i][j] lcs for str1[i1:] and str2[i2:]
+    # dp[i][j] = dp[i + 1][j + 1] + 1 if str1[i] == str2[j] else max(dp[i][j + 1], dp[i + 1][j])
+    # cur, old = [0] * n, [0] * n
+
+
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        if not text1 or not text2:
+            return 0
+        m, n = len(text1), len(text2)
+        cur, old = [0] * (n + 1), [0] * (n + 1)
+        for i in range(m - 1, -1, -1):
+            for j in range(n - 1, -1, -1):
+                if text1[i] == text2[j]:
+                    cur[j] = old[j + 1] + 1
+                else:
+                    cur[j] = max(cur[j + 1], old[j])
+            cur, old = old, cur
+        return old[0]

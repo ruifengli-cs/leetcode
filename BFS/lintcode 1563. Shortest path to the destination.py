@@ -19,9 +19,6 @@ class Solution:
                     return dist[(x, y)] 
                 for dx, dy in DIRECTIONS:
                     _x, _y = x + dx, y + dy
-                    # need to check _x, _y is valid
-                    # if targetMap[_x][_y] == 2:
-                    #     return dist[(x, y)] + 1
                     if self.is_valid(targetMap, _x, _y, dist):
                         q.append((_x, _y))
                         dist[(_x, _y)] = dist[(x, y)] + 1

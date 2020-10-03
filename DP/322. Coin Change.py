@@ -1,81 +1,90 @@
 class Solution:
-    # APP1 Not Working: greedy, fit the largest first, but it wont work for [10, 6], 12
-    def coinChange(self, coins: List[int], amount: int) -> int:
-        coins.sort(reverse = True)
-        res = 0
-        for coin in coins:
-            res += amount // coin
-            amount %= coin
-            print(amount, coin, res)
-        if amount:
-            return -1
-        return res
+# APP1: dfs: fewest number of coins that you need to make up that amount
+# for each coin, you can pick it for amount // coin[i] times
+# Time: O(s^n) where n = len(coins), s = amount / coin[i]
+# space: O(1). Runtime: TLE
 
-    # APP2: dfs, minimum count of coin starting at idx i.
-    # for each coin index i(level), pick from 0 - amount // coin(for every level), then move i to another coin
-    # Time: O(s ^ n), n = len(coins), s = amount // c, Space: O(1) Runtime: TLE
     def coinChange(self, coins: List[int], amount: int) -> int:
-        if not coins:
-            return -1
-        return self.dfs(coins, amount, 0)
+        if not coins or not amount:
+            return 0
+        return self.dfs(coins, 0, amount, len(coins))
 
-    def dfs(self, coins, amount, idx):
+    def dfs(self, coins, idx, amount, n):
         if amount == 0:
             return 0
-        if idx == len(coins):
+        if idx == n:
             return -1
-
-        res, times = sys.maxsize, amount // coins[idx]
-        for cnt in range(times + 1):
-            left = amount - coins[idx] * cnt
-            if left >= 0:
-                left_cnt = self.dfs(coins, left, idx + 1)
-                if left_cnt != -1:
-                    res = min(res, left_cnt + cnt)
-        return res if res != sys.maxsize else -1
-
-    # APP3: dfs + memoization. each level same coin
-    # Time: O(amount) space: O(amount)
-    def coinChange(self, coins: List[int], amount: int) -> int:
-        if not coins:
-            return -1
-        coins.sort()
-        return self.dfs(coins, amount, 0, [0] * (amount + 1))
-
-    def dfs(self, coins, amount, idx, memo):
-        if amount == 0:
-            return 0
-        if idx == len(coins) or amount < 0:
-            return -1
-        if memo[amount] != 0:
-            return memo[amount]
         res = sys.maxsize
         for i in range(amount // coins[idx] + 1):
-            left = amount - i * coins[idx]
-            left_count = self.dfs(coins, left, idx + 1, memo)
-            if left_count != -1:
-                res = min(res, left_count + i)
-        memo[amount] = res if res != sys.maxsize else -1
-        return memo[amount]
+            left = amount - coins[idx] * i
+            left_cnt = self.dfs(coins, idx + 1, left, n)
+            if left_cnt != -1:
+                res = min(res, i + left_cnt)
+        return res if res != sys.maxsize else -1
 
-    # APP4: dfs + memoization. each level different coin
-    # TIme: O(amount) space: O(amount) Runtime: 20%
+# APP2: dfs + memoization. Optimize APP1
+# Time: O(amount * n) space: O(amount * n) Runtime: TLE
     def coinChange(self, coins: List[int], amount: int) -> int:
+        if not coins or not amount:
+            return 0
+        return self.dfs(coins, amount, 0, len(coins), {})
+
+    def dfs(self, coins, amount, idx, n, memo):
+        if amount == 0:
+            return 0
+        if idx == n:
+            return -1
+        if (amount, idx) in memo:
+            return memo[(amount, idx)]
+        res = sys.maxsize
+        for i in range(amount // coins[idx] + 1):
+            left = amount - coins[idx] * i
+            left_cnt = self.dfs(coins, left, idx + 1, n, memo)
+            if left_cnt != -1:
+                res = min(res, i + left_cnt)
+        memo[(amount, idx)] = res if res != sys.maxsize else -1
+        return memo[(amount, idx)]
+
+# APP3: dfs: fewest number of coins that you need to make up that amount
+# each time, pick any coin from coins
+# Time: (s^n) space: O(1) RUntime: Tle
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        if not coins or not amount:
+            return 0
+        return self.dfs(coins, amount)
+
+    def dfs(self, coins, amount):
+        if amount < 0:
+            return -1
+        if amount == 0:
+            return 0
+        num = sys.maxsize
+        for coin in coins:
+            cnt = self.dfs(coins, amount - coin)
+            if cnt != -1:
+                num = min(num, cnt)
+        return num + 1 if num != sys.maxsize else -1
+
+# APP4: dfs + memoization. Optimize APP3
+# Time: O(amount) space: O(amount) Runtime: 34%
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        if not coins or not amount:
+            return 0
         return self.dfs(coins, amount, {})
 
     def dfs(self, coins, amount, memo):
-        if amount == 0:
-            return 0
         if amount < 0:
             return -1
+        if amount == 0:
+            return 0
         if amount in memo:
             return memo[amount]
-        count = sys.maxsize
+        num = sys.maxsize
         for coin in coins:
-            left_count = self.dfs(coins, amount - coin, memo)
-            if left_count != -1:
-                count = min(count, left_count + 1)
-        memo[amount] = count if count != sys.maxsize else -1
+            cnt = self.dfs(coins, amount - coin, memo)
+            if cnt != -1:
+                num = min(num, cnt)
+        memo[amount] = num + 1 if num != sys.maxsize else -1
         return memo[amount]
 
     #     APP5: bottom up DP. f: fewest number of coins that you need to make up i amount. ans: f[amount]
