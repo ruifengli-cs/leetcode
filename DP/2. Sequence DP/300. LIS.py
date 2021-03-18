@@ -80,7 +80,7 @@ class Solution:
         memo[(i, pre)] = res
         return res
 
-    # APP4: DP. f[i]: LIS upto index i, including nums[i], ans = max(f)
+    # APP4: DP. f[i]: LIS upto index i, including index nums[i], ans = max(f)
     # f[i] = 1 + max(f[j]) where 0 <= j < i, find max f[j] when nums[j] < nums[i]
     # Time: O(n^2) space: O(N^2) Runtime: 66%
     def lengthOfLIS(self, nums: List[int]) -> int:

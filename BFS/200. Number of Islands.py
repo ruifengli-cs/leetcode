@@ -77,3 +77,60 @@ class Solution:
         if grid[i][j] != '1':
             return False
         return True
+
+# APP3: union find
+# 10:23
+DIRECTIONS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid or not grid[0]:
+            return 0
+        m, n = len(grid), len(grid[0])
+        uf = UnionFind()
+        # init
+        for i in range(m):
+            for j in range(n):
+                if self.is_valid(grid, i, j):
+                    uf.parent[(i, j)] = (i, j)
+                    uf.size += 1
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] != "1":
+                    continue
+                for dx, dy in DIRECTIONS:
+                    _x, _y = i + dx, j + dy
+                    if self.is_valid(grid, _x, _y):
+                        uf.union((i, j), (_x, _y))
+        return uf.size
+
+    def is_valid(self, grid, x, y):
+        if x < 0 or x >= len(grid) or y < 0 or y >= len(grid[0]):
+            return False
+        if grid[x][y] != "1":
+            return False
+        return True
+
+
+class UnionFind:
+    def __init__(self):
+        self.parent = {}
+        self.size = 0
+
+    def union(self, x, y):
+        p_x = self.find(x)
+        p_y = self.find(y)
+        if p_x != p_y:
+            self.size -= 1
+            self.parent[p_x] = self.parent[p_y]
+
+    def find(self, x):
+        node = x
+        while node != self.parent[node]:
+            node = self.parent[node]
+
+        cur = x
+        while cur != node:
+            self.parent[cur] = node
+            cur = self.parent[cur]
+        return node

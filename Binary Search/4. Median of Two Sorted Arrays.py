@@ -41,26 +41,47 @@ class Solution:
     #     3. if L1 > R2, cutR = cut1 - 1, if L2 > R1, curL = cut1 + 1. else return
     #     4. you might cut at 0 or at end, treat it as -sys.maxsize and sys.maxisize
     #     Time: O(lg(min(m, n))), space: O(1) Runtime: 90%
+
+
+# APP3: binary search
+# Time: O(m + n) space: O(1)
+# To find median, we pick shortest array, binary search cut1 pos in left, right.
+# n = n1 + n2. when cut1 is decided, cut2 is also decided to n // 2 - cut1
+# if n is even, ans = (max(l1, l2) + min(r1, r2)) // 2
+# if n is odd, ans = min(r1, r2)
+# when cut is beginning or end, use minsize and maxsize as boundry.
+# case1 idea: L1 < R2 and L2 < R1
+# 123|4
+# 3|456
+
+# case2: L1 > R2 -> move cut1 left.
+# 123|4
+# 2|234
+
+# case3: L2 > R1 -> move cut1 right.
+# 1|234
+# 223|4
+class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-        nums_s, nums_l = (nums1, nums2) if len(nums1) < len(nums2) else (nums2, nums1)
-        m, n = len(nums_s), len(nums_l)
-        size = m + n
-        if not nums_s:
-            return (nums_l[size // 2] + nums_l[(size - 1) // 2]) / 2
-        left, right = 0, m
+        if not nums1 and not nums2:
+            return 0
+
+        a1, a2 = (nums1, nums2) if len(nums1) < len(nums2) else (nums2, nums1)
+        n1, n2 = len(a1), len(a2)
+        n, half = n1 + n2, (n1 + n2) // 2
+        left, right = 0, n1
         while left <= right:
             cut1 = (left + right) >> 1
-            cut2 = size // 2 - cut1
-            val1_l = nums_s[cut1 - 1] if cut1 > 0 else -sys.maxsize
-            val1_r = nums_s[cut1] if cut1 < m else sys.maxsize
-            val2_l = nums_l[cut2 - 1] if cut2 > 0 else -sys.maxsize
-            val2_r = nums_l[cut2] if cut2 < n else sys.maxsize
-            if val1_l > val2_r:
+            cut2 = half - cut1
+            l1 = a1[cut1 - 1] if cut1 > 0 else -sys.maxsize
+            r1 = a1[cut1] if cut1 < n1 else sys.maxsize
+            l2 = a2[cut2 - 1] if cut2 > 0 else -sys.maxsize
+            r2 = a2[cut2] if cut2 < n2 else sys.maxsize
+            if l1 > r2:
                 right = cut1 - 1
-            elif val2_l > val1_r:
+            elif r1 < l2:
                 left = cut1 + 1
             else:
-                if size % 2 == 0:
-                    return (max(val1_l, val2_l) + min(val1_r, val2_r)) / 2
-                return min(val1_r, val2_r)
-        return -1
+                if n & 1 == 0:
+                    return (max(l1, l2) + min(r1, r2)) / 2
+                return min(r1, r2)

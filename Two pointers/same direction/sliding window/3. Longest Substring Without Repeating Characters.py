@@ -23,22 +23,25 @@ class Solution:
                 max_len = max(max_len, right - q[0])
             return max_len
 
-    #     APP3: two pointers + set
-    #     Time: O(n) space: O(n) runtime: 71%
+    #     APP3: two pointers + set. best
+    #     Time: O(n) space: O(n) runtime: 90%
         def lengthOfLongestSubstring(self, s: str) -> int:
             if not s:
                 return 0
-            n, l, r, uniq, max_len = len(s), 0, 0, set(), 0
-            while r < n:
-                if s[r] in uniq:
-                    max_len = max(max_len, r - l)
-                while s[r] in uniq:
-                    uniq.remove(s[l])
-                    l += 1
-                uniq.add(s[r])
-                r += 1
-            max_len = max(max_len, r - l)
-            return max_len
+            unique, n, left, right, res = set(), len(s), 0, 0, 0
+            while right < n:
+                if s[right] not in unique:
+                    unique.add(s[right])
+                    right += 1
+                    continue
+                res = max(res, len(unique))
+                while s[left] != s[right]:
+                    unique.remove(s[left])
+                    left += 1
+                left += 1
+                right += 1
+            res = max(res, len(unique))
+            return res
 
     #     APP4: use dict data[ch] = idx. Runtime: 78%
     def lengthOfLongestSubstring(self, s: str) -> int:
