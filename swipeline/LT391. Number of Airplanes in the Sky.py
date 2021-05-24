@@ -18,7 +18,7 @@ class Solution:
 
     # APP2: swipeline. add input into points: [start, 1], [end, -1]
     # sort points and count
-    # Time: O(n) space: O(n)
+    # Time: O(nlgn) space: O(n)
     def countOfAirplanes(self, airplanes):
         if not airplanes:
             return 0

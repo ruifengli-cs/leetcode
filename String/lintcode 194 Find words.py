@@ -96,24 +96,24 @@ class Solution:
     def findWords(self, str, dict):
         if not str or not dict:
             return []
-        n = len(str)
-        res = []
-        mapping = [[n] * 26 for _ in range(n + 1)]
-        for i in range(n - 1, -1, -1):
-            for j in range(26):
-                mapping[i][j] = mapping[i + 1][j]
-                if ord(str[i]) - ord('a') == j:
-                    mapping[i][j] = i
-        # Two pointers like APP1
+        data, n, res = self.get_data(str), len(str), []
         for word in dict:
-            cur_word = cur_str = 0
-            while cur_str < len(str) and cur_word < len(word):
-                char = word[cur_word]
-                next_pos = mapping[cur_str][ord(char) - ord('a')]
-                if next_pos == n:
+            idx = cur_word = 0
+            while cur_word < len(word):
+                ch = word[cur_word]
+                pos = data[idx][ord(ch) - ord('a')]
+                if pos == n:
                     break
-                cur_str = next_pos + 1
+                idx = pos + 1
                 cur_word += 1
             if cur_word == len(word):
                 res.append(word)
         return res
+
+    def get_data(self, s):
+        n = len(s)
+        data = [[n] * 26 for _ in range(n + 1)]
+        for i in range(n - 1, -1, -1):
+            for j in range(26):
+                data[i][j] = i if ord(s[i]) - ord('a') == j else data[i + 1][j]
+        return data

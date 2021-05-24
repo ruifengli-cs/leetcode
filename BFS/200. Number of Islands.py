@@ -48,7 +48,7 @@ class Solution:
     def numIslands(self, grid: List[List[str]]) -> int:
         if not grid or not grid[0]:
             return 0
-        q = collections.deque()
+
         visited = set()
         n, m = len(grid), len(grid[0])
         ans = 0

@@ -47,35 +47,44 @@ class Solution:
 
     # APP3: union find: union all friends, return how many circle
     # Time: O(n^2) Space: O(n^2) Runtime: 43
-    def findCircleNum(self, M: List[List[int]]) -> int:
+class Solution:
+    """
+    @param M: a matrix
+    @return: the total number of friend circles among all the students
+    """
+
+    def findCircleNum(self, M):
         if not M or not M[0]:
             return 0
-        count, n = 0, len(M)
-        parent = [i for i in range(n)]
-        
-        for i in range(n):
-            for j in range(n):
-                if i == j:
-                    continue
-                if M[i][j] == 1:
-                    self.union(i, j, parent)
-        return len(set(self.find(i, parent) for i in range(n)))
-    
-    def union(self, i, j, parent):
-        root_i = self.find(i, parent)
-        root_j = self.find(j, parent)
-        if root_i == root_j:
-            return
-        parent[root_i] = root_j
-    
-    def find(self, i, parent):
-        root = i
-        while root != parent[root]:
-            root = parent[root]
-        
-        while i != root:
-            temp = parent[i]
-            parent[i] = root
-            i = temp
+        n = len(M)
+        uf = UnionFind(n)
 
+        for i in range(n):
+            for j in range(i + 1, n):
+                if M[i][j] == 0:
+                    continue
+                uf.union(i, j)
+        return uf.size
+
+
+class UnionFind():
+    def __init__(self, n):
+        self.size = n
+        self.parent = {}
+        for i in range(n):
+            self.parent[i] = i
+
+    def union(self, i, j):
+        parent1, parent2 = self.find(i), self.find(j)
+        if parent1 != parent2:
+            self.size -= 1
+            self.parent[parent1] = parent2
+
+    def find(self, i):
+        root = i
+        while root != self.parent[root]:
+            root = self.parent[root]
+
+        while i != root:
+            i, self.parent[i] = self.parent[i], root
         return root
